@@ -4,6 +4,33 @@
 
 //!!!!!!!! Note on get and set at the very bottom!!!!!!!!!!
 
+
+//overview, essentiqally every 'type' of 'Object' is creating a 
+//js Object as below. So say for example the Con it needs
+//a refence to the function because that is the property name.
+//Whereas in contrast the factory returns that function so it 
+//can be declared in the Factory without reference. 
+// Private variables are a bit confusing. The class returns the 
+// private varable in the function but it can't be accessed because
+//you can't go .# on the object. Whereas Con and Fact the private
+//var is not in the object so I don't know where it is stored
+//if not in the object?? Seems to work just doesn't make as much sense.
+//Don't know how much in practise you'd need a private var but
+//maybe just use class when you do?? 
+
+const myObject = {
+  property: 'Value!',
+  otherProperty: 77,
+  myFunction: function() {
+    console.log("hiya");
+  }
+};
+
+myObject.myFunction();
+
+
+
+
 function playerCreatorCon(name, score) {
 
   this.name = name;
@@ -16,6 +43,10 @@ function playerCreatorCon(name, score) {
   this.getPrivate = getPrivateF;    //this works as does above
   function getPrivateF() {
     console.log("private con 1: " + privateCon);
+  }
+  this.setPrivate = function(newPrv) {
+    privateCon = newPrv;
+    console.log("set private: " + privateCon);
   }
 
 }
@@ -31,6 +62,8 @@ playerCreatorCon.prototype.sharedVar = "heyCon";
 
 let playerCon = new playerCreatorCon("John", 8);
 
+console.log(playerCon);
+
 playerCon.increment(); // 9
 
 console.log("Con: " + playerCon.name);
@@ -39,6 +72,12 @@ playerCon.updateName("FrankCon");
 console.log("Con Updated name: " + playerCon.name);
 console.log("Con shared var: " + playerCon.sharedVar);
 //console.log("private CON: " + prtivateCon);
+playerCon.getPrivate();
+
+let playerCon2 = new playerCreatorCon("John", 8);
+playerCon2.getPrivate();
+playerCon2.setPrivate("cock off");
+playerCon2.getPrivate();
 playerCon.getPrivate();
 
 
@@ -68,7 +107,7 @@ console.log("F: " + playerF.score);
 function playerCreatorFR(name, score) {
   let sharedVar = "hey1"; //i.e. returned in the factory
   let privateVar = 0; //i.e. not returned in the factory
-
+  
   function increment() {
     return (this.score += 1);
   }
@@ -101,6 +140,7 @@ function playerCreatorFR(name, score) {
 }
 
 const playerFR = playerCreatorFR("John", 8);
+console.log(playerFR);
 
 playerFR.increment(); // 9
 
@@ -149,6 +189,7 @@ class playerCreatorC {
 }
 
 let playerC = new playerCreatorC("John", 8);
+console.log(playerC);
 
 playerC.increment(); // 9
 
@@ -162,6 +203,7 @@ console.log("C sharedVar: " + playerC.sharedVar);
 playerC.incrementClPrv();
 //console.log("C should not work privateVar: " + playerC.privateVar);
 console.log("C private Var: " + playerC.getCPrv());
+//console.log("private from C: " + playerC.#privateVar);
 
 
 
