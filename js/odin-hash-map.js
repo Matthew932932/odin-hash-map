@@ -17,6 +17,15 @@
 //if not in the object?? Seems to work just doesn't make as much sense.
 //Don't know how much in practise you'd need a private var but
 //maybe just use class when you do?? 
+//Also another thought process for understanding. The 'this.' makes 
+//a function essentially an object^^. But for factory you are returning 
+//a object for you don't 'this.'. Class is a syntax over the top of 
+//of the nuts and bolts so it sort uses a bit of both ideas/syntax.
+//^^Although of course for construtor model you can use .protoype to add
+//functions or variables to the object (because i guess essentially  
+//the prototype is Object hmm yes not a coincidence)
+
+
 
 const myObject = {
   property: 'Value!',
