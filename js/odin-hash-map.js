@@ -26,7 +26,7 @@ function playerCreatorFR(name, score) {
   
   
   let sharedVar = "hey1";
-  let privateVar = "hey2";
+  let privateVar = 0;
   
   function increment() {
     return (this.score += 1);
@@ -36,17 +36,12 @@ function playerCreatorFR(name, score) {
     this.name = newName;
   }
 
-  // function incrementPrvA() {
-  //   console.log(this.privateVar);
-  //   //this.privateVar += 1;
+  //const incrementPrvB = () => {console.log("private var: " + privateVar);privateVar += 1;console.log("private var post: " + privateVar);}
 
-  // }
-
-  const incrementPrvB = () => {console.log(this.privateVar);}
+  function incrementPrvB () {console.log("FR in private var: " + privateVar);privateVar += 1;console.log("FR in private var post: " + privateVar);}
 
   function getPrv() {
-    console.log(this.privateVar);
-    return this.privateVar;
+    return privateVar;
   }
 
   return { name, score, sharedVar, increment, updateName, incrementPrvB, getPrv };
@@ -56,16 +51,16 @@ let playerFR = playerCreatorFR("John", 8);
 
 playerFR.increment(); // 9
 
-console.log("FR: " + playerFR.name);
-console.log("FR: " + playerFR.score);
+console.log("FR name: " + playerFR.name);
+console.log("FR sacore: " + playerFR.score);
 
 playerFR.updateName("Frank")
-console.log("Updated name FR: " + playerFR.name);
+console.log("FR Updated name: " + playerFR.name);
 
-console.log("shared var1: " + playerFR.sharedVar);
-playerFR.incrementPrvB;
-//console.log("incrementPrv FR: " + playerFR.privateVar);  //doesn't work, as expected
-//console.log(playerFR.getPrv());
+console.log("FR shared var1: " + playerFR.sharedVar);
+playerFR.incrementPrvB();
+//console.log("private var should fail FR: " + playerFR.privateVar);  //should fail does fail
+console.log("FR get private var: " + playerFR.getPrv());
 
 class playerCreatorC {
   constructor(name, score) {
