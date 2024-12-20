@@ -2,6 +2,10 @@
 
 // your code
 
+//!!!!!!!!!!!Turns out I was taking a bit of code from each section
+//and implemented bucketIndexInternalArr.push({key,value});
+//when it sould have been bucketIndexInternalArr.push([key,value]);
+
 
 //code I found didn't work, maybe I didn't
 //convert it properly BUUT I used the general
