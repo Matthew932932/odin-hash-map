@@ -2,282 +2,112 @@
 
 // your code
 
-//!!!!!!!! Note on get and set at the very bottom!!!!!!!!!!
 
+//code I found didn't work, maybe I didn't
+//convert it properly BUUT I used the general
+//concept. it makes an array at the index of the 
+//bucket array. Then push(s) onto the array if 
+//there is a collision. I think the intention of 
+//the code I found was to make an array of arrays
+//but I ended up getting an array of objects. So I
+// just used .key instead of the code I found using [][]
+//
+//working pretty good. haven't implemented upping capacity
+//yet. But what I would do is change the 'this.capacity' to 
+//32(i think it is multiple of 2) then make a function
+//which creates a new buckets array of copies the old
+//buckets to it. rehashing with % 32 as they copy over 
+//to thier new index.
 
-//overview, essentiqally every 'type' of 'Object' is creating a 
-//js Object as below. So say for example the Con it needs
-//a refence to the function because that is the property name.
-//Whereas in contrast the factory returns that function so it 
-//can be declared in the Factory without reference. 
-// Private variables are a bit confusing. The class returns the 
-// private varable in the function but it can't be accessed because
-//you can't go .# on the object. Whereas Con and Fact the private
-//var is not in the object so I don't know where it is stored
-//if not in the object?? Seems to work just doesn't make as much sense.
-//Don't know how much in practise you'd need a private var but
-//maybe just use class when you do?? 
-//Also another thought process for understanding. The 'this.' makes 
-//a function essentially an object^^. But for factory you are returning 
-//a object for you don't 'this.'. Class is a syntax over the top of 
-//of the nuts and bolts so it sort uses a bit of both ideas/syntax.
-//^^Although of course for construtor model you can use .protoype to add
-//functions or variables to the object (because i guess essentially  
-//the prototype is Object hmm yes not a coincidence)
-
-
-
-const myObject = {
-  property: 'Value!',
-  otherProperty: 77,
-  myFunction: function() {
-    console.log("hiya");
-  }
-};
-
-myObject.myFunction();
-
-
-
-
-function playerCreatorCon(name, score) {
-
-  this.name = name;
-  this.score = score;
-
-  let privateCon = "private CON";
-  // this.getPrivate = function() {
-  //   console.log(privateCon);
-  // };
-  this.getPrivate = getPrivateF;    //this works as does above
-  function getPrivateF() {
-    console.log("private con 1: " + privateCon);
-  }
-  this.setPrivate = function(newPrv) {
-    privateCon = newPrv;
-    console.log("set private: " + privateCon);
-  }
-
-}
-
-playerCreatorCon.prototype.increment = function () {
-  this.score++;
-};
-playerCreatorCon.prototype.updateName = function (newName) {
-  this.name = newName;
-};
-playerCreatorCon.prototype.sharedVar = "heyCon";
-
-
-let playerCon = new playerCreatorCon("John", 8);
-
-console.log(playerCon);
-
-playerCon.increment(); // 9
-
-console.log("Con: " + playerCon.name);
-console.log("Con: " + playerCon.score);
-playerCon.updateName("FrankCon");
-console.log("Con Updated name: " + playerCon.name);
-console.log("Con shared var: " + playerCon.sharedVar);
-//console.log("private CON: " + prtivateCon);
-playerCon.getPrivate();
-
-let playerCon2 = new playerCreatorCon("John", 8);
-playerCon2.getPrivate();
-playerCon2.setPrivate("cock off");
-playerCon2.getPrivate();
-playerCon.getPrivate();
-
-
-
-
-// don't love this structure, see FR for prefered
-function playerCreatorF(name, score) {
-  return {
-    name: name,
-    score: score,
-    increment() {
-      return (this.score += 1);
-    },
-  };
-}
-
-let playerF = playerCreatorF("John", 8);
-
-playerF.increment(); // 9
-
-console.log("F: " + playerF.name);
-console.log("F: " + playerF.score);
-
-
-
-
-function playerCreatorFR(name, score) {
-  let sharedVar = "hey1"; //i.e. returned in the factory
-  let privateVar = 0; //i.e. not returned in the factory
+class HashMapCl {
   
-  function increment() {
-    return (this.score += 1);
+  constructor() {
+    this.capacity = 16;
+    this.buckets = new Array(this.capacity).fill(null); //st
+    this.loadFactor = 0.75;
   }
 
-  function updateName(newName) {
-    console.log("up name pre" + this.name);
-    this.name = newName;
-    console.log("up name post" + this.name);
-  }
-
-  function incrementPrvB() {
-    console.log("FR in private var: " + privateVar);
-    privateVar += 1;
-    console.log("FR in private var post: " + privateVar);
-  }
-
-  function getPrv() {
-    return privateVar;
-  }
-
-  return {
-    name,
-    score,
-    sharedVar,
-    increment,
-    updateName,
-    incrementPrvB,
-    getPrv,
-  };
-}
-
-const playerFR = playerCreatorFR("John", 8);
-console.log(playerFR);
-
-playerFR.increment(); // 9
-
-console.log("FR name: " + playerFR.name);
-console.log("FR sacore: " + playerFR.score);
-
-playerFR.updateName("Frank");
-console.log("FR Updated name: " + playerFR.name);
-
-console.log("FR shared var1: " + playerFR.sharedVar);
-playerFR.sharedVar = "heyNow";
-console.log("FR shared var1 changed: " + playerFR.sharedVar);
-playerFR.incrementPrvB();
-//console.log("private var should fail FR: " + playerFR.privateVar);  //should fail does fail
-console.log("FR get private var: " + playerFR.getPrv());
-
-const playerFR2 = playerCreatorFR("Fred", 13);
-console.log("FR2 shared var1: " + playerFR2.name + " " + playerFR2.sharedVar);
-
-class playerCreatorC {
-  sharedVar = "heyC";
-  #privateVar = 1;
-
-  constructor(name, score) {
-    this.name = name;
-    this.score = score;
-  }
-
-  increment() {
-    this.score++;
-  }
-
-  updateName(newName) {
-    this.name = newName;
-  }
-
-  incrementClPrv() {
-    console.log("CL in private var: " + this.#privateVar);
-    this.#privateVar += 1;
-    console.log("CL in private var post: " + this.#privateVar);
-  }
-
-  getCPrv() {
-    return this.#privateVar;
-  }
-}
-
-let playerC = new playerCreatorC("John", 8);
-console.log(playerC);
-
-playerC.increment(); // 9
-
-console.log("C name: " + playerC.name);
-console.log("C score: " + playerC.score);
-
-playerC.updateName("Frank");
-console.log("C Updated name: " + playerC.name);
-
-console.log("C sharedVar: " + playerC.sharedVar);
-playerC.incrementClPrv();
-//console.log("C should not work privateVar: " + playerC.privateVar);
-console.log("C private Var: " + playerC.getCPrv());
-//console.log("private from C: " + playerC.#privateVar);
-
-
-
-// GET and SET
-//essentially changes the .something into a fucntion call
-//where the equals is the argument into the function
-//especiallt ingenious implemented in class, as below example,
-//because it invoke the .something on initialisation and therefore
-//can use it as an initialise check as well as property update
-//checks. Haven't fully figured out the exact syntax for this into
-//a Fact or a Con but i'm sure it can be done.
-
-const student = {
-  firstName: 'Monica',
-  
-  //accessor property(setter)
-  set changeName(newName) {
-      this.firstName = newName;
-  }
-};
-
-console.log(student.firstName); // Monica
-// change(set) object property using a setter
-student.changeName = 'Sarah';
-console.log(student.firstName); // Sarah
-
-
-const language = {
-  set current(name) {
-    this.log.push(name);
-  },
-  log: [],
-};
-
-language.current = 'EN';
-language.current = 'FA';
-
-console.log(language.log);
-// Expected output: Array ["EN", "FA"]
-
-
-class User {
-
-  constructor(name) {
-    // invokes the setter  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    this.name = name;
-  }
-
-  get name() {
-    return this._name;
-  }
-
-  set name(value) {
-    if (value.length < 4) {
-      console.log("Name is too short.");
-      return;
+  hash(key) {
+    let hashCode = 0;
+      
+    const primeNumber = 31;
+    for (let i = 0; i < key.length; i++) {
+      hashCode = primeNumber * hashCode + key.charCodeAt(i);
     }
-    this._name = value;
+    console.log(hashCode);
+    hashCode = hashCode % this.capacity;
+    console.log(hashCode);
+    return hashCode;
+  } 
+
+  set(key,value) {
+    const index = this.hash(key);
+    if (!this.buckets[index]){
+      //making a new array at the index, effectively 
+      //'the' required linked list with the use of push, 
+      //at least for the puspose of this project
+      this.buckets[index] = [];    
+      //console.log(this.buckets);
+    }
+
+    const bucketIndexInternalArr = this.buckets[index];
+    // for (let i = 0; i < bucketS.length; i++) {
+    //   if (bucketS[i][0] === key) {
+    //     bucketS[i][1] = value;
+    //     return;
+    //   }
+    // }
+
+    bucketIndexInternalArr.push({key,value});
+    //console.log(this.buckets);
+
+
   }
+
+  get(key) {
+    const index = this.hash(key);
+    const bucketIndexInternalArr = this.buckets[index];
+    if(!bucketIndexInternalArr)
+    {
+      return "empty";
+    }
+
+    for (let i = 0; i < bucketIndexInternalArr.length; i++) {
+      //console.log("h1")
+      //console.log(bucketIndexInternalArr[0].key)
+      //console.log(bucketIndexInternalArr[1][i])
+      if (bucketIndexInternalArr[i].key === key) {
+        //console.log("h2")
+        return bucketIndexInternalArr[i].value;
+      }
+    }
+
+    return "failed";
+    
+  }
+  
 }
 
-let user = new User("John");
-console.log(user.name); // John
-user = new User(""); // Name is too short.
-user.name = "Bob";
-user.name = "Tommy";
-console.log(user.name);
-let user2 = new User("Tim");
+let HashMapClOb = new HashMapCl();
+//HashMapClOb.set("John", "49");
+//HashMapClOb.set("Sallort", "45");
+//HashMapClOb.set("Solo", "34");
+//HashMapClOb.set("Gina", "78");
+HashMapClOb.set('banana', 'yellow')
+HashMapClOb.set('carrot', 'orange')
+HashMapClOb.set('dog', 'brown');
+HashMapClOb.set('elephant', 'gray')
+HashMapClOb.set('frog', 'green')
+HashMapClOb.set('grape', 'purple')
+HashMapClOb.set('hat', 'black')
+HashMapClOb.set('ice cream', 'white')
+HashMapClOb.set('jacket', 'blue')
+HashMapClOb.set('kite', 'pink')
+HashMapClOb.set('lion', 'golden')
+console.log(HashMapClOb.buckets);
+console.log("get elephant: " + HashMapClOb.get("elephant"));
+console.log("get lion: " + HashMapClOb.get("lion"));
+//console.log(HashMapClOb.get("Solo"));
+//console.log(HashMapClOb.get("apple"));
+
+
