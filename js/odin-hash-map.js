@@ -5,7 +5,10 @@
 //!!!!!!!!!!!Turns out I was taking a bit of code from each section
 //and implemented bucketIndexInternalArr.push({key,value});
 //when it sould have been bucketIndexInternalArr.push([key,value]);
-
+//this code was from https://www.squash.io/javascript-hashmap-a-complete-guide/
+//this code was nice and neat, https://www.youtube.com/watch?v=QZWfMngWPZ0
+//may ultimately be the same but have a look at this too if you are going
+//to finish this project properly, it uses .push([key,value])
 
 //code I found didn't work, maybe I didn't
 //convert it properly BUUT I used the general
